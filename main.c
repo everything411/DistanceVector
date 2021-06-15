@@ -150,10 +150,10 @@ void *build_message_from_table(int *psize)
     do_log("## Sent. Source Node = %s; Sequence Number = %d\n", config.self.name, seq++);
     for (int i = 0; i < table_size; i++)
     {
-        if (!route_table[i].reachable)
-        {
-            continue;
-        }
+        // if (!route_table[i].reachable)
+        // {
+        //     continue;
+        // }
         mesgs[c].dest_node = route_table[i].dest_node;
         mesgs[c].distance = route_table[i].distance;
         mesgs[c].src_node = config.self;
@@ -199,6 +199,11 @@ void update_table_from_message(struct message *mesgs, int n)
         {
             double dist = 0.0;
             dist = mesgs[i].distance + neighbors[neighbor_index].cost;
+            if (route_table[table_index].distance >= config.unreachable && dist >= config.unreachable)
+            {
+                continue;
+            }
+            
             if (route_table[table_index].distance > dist)
             {
                 route_table[table_index].distance = dist;
